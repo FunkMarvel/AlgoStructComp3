@@ -31,5 +31,14 @@ namespace Graph
         {
             connectedNodes.Capacity = numberOfConnectedNodes;
         }
+        
+        public static bool operator==(Node someNode, Node otherNode)
+        {
+            return someNode.NodeID == otherNode.NodeID;
+        }
+        public static bool operator !=(Node someNode, Node otherNode)
+        {
+            return !(someNode == otherNode);
+        }
     }
 }

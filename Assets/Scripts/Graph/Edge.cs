@@ -1,47 +1,55 @@
-using System.Collections;
 using System.Collections.Generic;
-using Graph;
-using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-[RequireComponent(typeof(LineRenderer))]
-public class Edge : MonoBehaviour
+namespace Graph
 {
-    public int EdgeID { get; set; } = 0;
-    public Vector3 position { get; set; } = Vector3.zero;
-    public int timeToFinish { get; set; } = 0;
-    public List<Node> connectedNodes;
-
-    private Transform _objectTransform;
-
-    private LineRenderer _line;
-
-    public Edge()
+    [RequireComponent(typeof(LineRenderer))]
+    public class Edge : MonoBehaviour
     {
-        connectedNodes = new List<Node>(2);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        _objectTransform = GetComponent<Transform>();
-    }
+        public int EdgeID { get; set; } = 0;
+        public int timeToFinish { get; set; } = 0;
+        public List<Node> connectedNodes;
 
-    public void ConnectEdge(Node a, Node b)
-    {
-        connectedNodes.Add(a);
-        connectedNodes.Add(b);
+        private Transform _objectTransform;
+
+        private LineRenderer _line;
+
+        public Edge()
+        {
+            connectedNodes = new List<Node>(2);
+        }
+        // Start is called before the first frame update
+        void Start()
+        {
+            _objectTransform = GetComponent<Transform>();
+        }
+
+        public void ConnectEdge(Node a, Node b, float edgeThicknessPercentage)
+        {
+            connectedNodes.Add(a);
+            connectedNodes.Add(b);
         
-        _line = GetComponent<LineRenderer>();
+            _line = GetComponent<LineRenderer>();
         
-        _line.material = new Material(Shader.Find("Sprites/Default"));
-        _line.widthMultiplier = 0.05f;
-        _line.positionCount = 2;
+            _line.material = new Material(Shader.Find("Sprites/Default"));
+            _line.widthMultiplier = edgeThicknessPercentage*0.01f;
+            _line.positionCount = 2;
         
-        var points = new Vector3[2];
-        points[0] = a.position;
-        points[1] = b.position;
+            var points = new Vector3[2];
+            points[0] = a.position;
+            points[1] = b.position;
         
-        _line.SetPositions(points);
+            _line.SetPositions(points);
+        }
+        
+        public static bool operator==(Edge someEdge, Edge otherEdge)
+        {
+            return otherEdge != null && someEdge != null && someEdge.EdgeID == otherEdge.EdgeID;
+        }
+        public static bool operator !=(Edge someEdge, Edge otherEdge)
+        {
+            return !(someEdge == otherEdge);
+        }
     }
 }

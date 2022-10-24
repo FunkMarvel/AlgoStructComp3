@@ -352,6 +352,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4784726784176889412, guid: 1a216cb31cdea3f4cad99453ab51da4b, type: 3}
+      propertyPath: edgeThicknessPercentage
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4784726784176889413, guid: 1a216cb31cdea3f4cad99453ab51da4b, type: 3}
       propertyPath: m_Name
       value: Graph

@@ -12,20 +12,17 @@ namespace Graph
         public List<Node> Nodes;
         public List<Edge> Edges;
 
+        public float edgeThicknessPercentage = 0.05f * 100;
+
         public int numberOfNodes { get; private set; }
         public int numberOfEdges { get; private set; }
         public int numberOfEdgesPerNode { get; private set; }
 
         public float graphBoundingCubeLength;
-        // Start is called before the first frame update
-        void Start()
-        {
-            
-        }
 
         private void Awake()
         {
-            GenerateGraph(5,2);
+            GenerateGraph(10,5);
         }
 
         public void GenerateGraph(int size, int edgesPerNode)
@@ -50,7 +47,19 @@ namespace Graph
             for (int i = 1; i < numberOfNodes; i++)
             {
                 CreateEdge(Nodes[i], Nodes[i-1]);
-                numberOfEdges++;
+            }
+            
+            Shuffle(Nodes);
+            for (int i = 0; i < numberOfNodes; i++)
+            {
+                for (int j = 0; j < numberOfNodes; j++)
+                {
+                    if (i == j) break;
+                    if (Nodes[i].connectedNodes.Count >= numberOfEdgesPerNode) break;
+                    if (Nodes[i].connectedNodes.Contains(Nodes[j])) break;
+                    
+                    CreateEdge(Nodes[i], Nodes[j]);
+                }
             }
         }
 
@@ -77,11 +86,29 @@ namespace Graph
 
         private void CreateEdge(Node a, Node b)
         {
+            if (a == b) return;
+            numberOfEdges++;
+            
             a.connectedNodes.Add(b);
             b.connectedNodes.Add(a);
+            
             Edges.Add(Instantiate(EdgeObject, a.position, Quaternion.identity).GetComponent<Edge>());
-            Edges[numberOfEdges].ConnectEdge(a, b);
-            Edges[numberOfEdges].EdgeID = numberOfEdges;
+            Edges[numberOfEdges-1].ConnectEdge(a, b, edgeThicknessPercentage);
+            Edges[numberOfEdges-1].EdgeID = numberOfEdges-1;
+        }
+
+        public Edge GetEdge(Node firstNode, Node secondNode)
+        {
+            if (firstNode == secondNode) return null;
+            for (int i = 0; i < numberOfEdges; i++)
+            {
+                if ((Edges[i].connectedNodes[0] == firstNode && Edges[i].connectedNodes[1] == secondNode) ||
+                    (Edges[i].connectedNodes[0] == secondNode && Edges[i].connectedNodes[1] == firstNode))
+                {
+                    return Edges[i];
+                }
+            }
+            return null;
         }
     }
 }

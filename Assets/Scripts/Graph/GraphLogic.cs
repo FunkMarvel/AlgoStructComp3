@@ -8,7 +8,9 @@ namespace Graph
     public class GraphLogic : MonoBehaviour
     {
         public GameObject NodeObject;
+        public GameObject EdgeObject;
         public List<Node> Nodes;
+        public List<Edge> Edges;
 
         public int numberOfNodes { get; private set; }
         public int numberOfEdges { get; private set; }
@@ -32,7 +34,8 @@ namespace Graph
             numberOfEdgesPerNode = edgesPerNode;
 
             Nodes = new List<Node>(numberOfNodes);
-
+            
+            // create specified number of nodes
             for (int i = 0; i < numberOfNodes; i++)
             {
                 Vector3 spawnPos = RandPos();
@@ -43,10 +46,11 @@ namespace Graph
                 Nodes[i].NodeID = i;
             }
             
-            Shuffle(Nodes);
+            Shuffle(Nodes); // shuffle and connect nodes to create spanning tree
             for (int i = 1; i < numberOfNodes; i++)
             {
                 CreateEdge(Nodes[i], Nodes[i-1]);
+                numberOfEdges++;
             }
         }
 
@@ -62,7 +66,7 @@ namespace Graph
         }
 
         /// <summary>
-        /// Shuffles the element order of the specified list.
+        /// Shuffles the order of nodes in the graph
         /// </summary>
         private static void Shuffle<T>(IList<T> nodeList) {
             for (var i = 0; i < nodeList.Count - 1; ++i) {
@@ -75,6 +79,9 @@ namespace Graph
         {
             a.connectedNodes.Add(b);
             b.connectedNodes.Add(a);
+            Edges.Add(Instantiate(EdgeObject, a.position, Quaternion.identity).GetComponent<Edge>());
+            Edges[numberOfEdges].ConnectEdge(a, b);
+            Edges[numberOfEdges].EdgeID = numberOfEdges;
         }
     }
 }

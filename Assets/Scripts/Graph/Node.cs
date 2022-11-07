@@ -23,6 +23,10 @@ namespace Graph
         public Renderer renderer { get; set; }
         public NodeType type { get; set; } = NodeType.Blue;
 
+        public float G = 0f;
+        public float H = 0f;
+        public float F = 0f;
+
         public enum NodeType
         {
             Orange,

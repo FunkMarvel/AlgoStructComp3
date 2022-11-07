@@ -74,20 +74,40 @@ namespace Graph
         {
             var index = Random.Range(0, 8);
             type = (NodeType)index;
-            Debug.Log("Type: " + type);
+
             timeToFinish = _timesTofinish[type];
             
             _materialProperies = new MaterialPropertyBlock();
             renderer = GetComponent<Renderer>();
             renderer.GetPropertyBlock(_materialProperies);
             _materialProperies.SetColor("_Color", colors[type]);
-            Debug.Log("Awake Type: " + type + " : " + colors[type]);
+
             renderer.SetPropertyBlock(_materialProperies);
         }
 
         public void SetNumberOfConnectedNodes(int numberOfConnectedNodes)
         {
             connectedNodes.Capacity = numberOfConnectedNodes;
+        }
+
+        public void SetColor(Color NewColor)
+        {
+            _materialProperies = new MaterialPropertyBlock();
+            renderer = GetComponent<Renderer>();
+            renderer.GetPropertyBlock(_materialProperies);
+            _materialProperies.SetColor("_Color", NewColor);
+
+            renderer.SetPropertyBlock(_materialProperies);
+        }
+
+        public void ResetColor()
+        {
+            _materialProperies = new MaterialPropertyBlock();
+            renderer = GetComponent<Renderer>();
+            renderer.GetPropertyBlock(_materialProperies);
+            _materialProperies.SetColor("_Color", colors[type]);
+
+            renderer.SetPropertyBlock(_materialProperies);
         }
         
         public static bool operator==(Node someNode, Node otherNode)

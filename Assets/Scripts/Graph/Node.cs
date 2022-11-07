@@ -10,7 +10,7 @@ namespace Graph
     [RequireComponent(typeof(MeshRenderer))]
     public class Node : MonoBehaviour
     {
-        public int NodeID = 0;
+        public int NodeID = -1;
         public Vector3 position { get; set; } = Vector3.zero;
         public float timeToFinish { get; set; } = 0f;
         public List<Node> connectedNodes;

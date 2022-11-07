@@ -10,6 +10,7 @@ namespace Graph
         public int EdgeID { get; set; } = 0;
         public int timeToFinish { get; set; } = 0;
         public List<Node> connectedNodes;
+        public bool bOpen = true;
 
         private Transform _objectTransform;
         

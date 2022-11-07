@@ -110,7 +110,7 @@ namespace Graph
             return null;
         }
 
-        public float Distance(Node A, Node B)
+        public static float Distance(Node A, Node B)
         {
             return (A.position - B.position).magnitude;
         }

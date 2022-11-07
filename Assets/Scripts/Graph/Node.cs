@@ -23,6 +23,8 @@ namespace Graph
         public Renderer renderer { get; set; }
         public NodeType type { get; set; } = NodeType.Blue;
 
+        public Node parent { get; set; } = null;
+
         public enum NodeType
         {
             Orange,

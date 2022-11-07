@@ -63,6 +63,7 @@ public class AStarAlgo : MonoBehaviour
     private bool done = false;
 
     public List<Node> CreatedNodes;
+    public List<Edge> Neighbours = new List<Edge>();
 
     // Start is called before the first frame update
     void BeginSearch()
@@ -79,19 +80,21 @@ public class AStarAlgo : MonoBehaviour
             return;
         }
 
-        foreach (Node edges in thisNode.connectedNodes)
+        foreach (Node NextNode in thisNode.connectedNodes)
         {
-            float G = GraphLogic.Distance(thisNode, edges) + thisNode.timeToFinish;
-            float H = Graph.GraphLogic.Distance(edges, goalNode);
+            float G = GraphLogic.Distance(thisNode, NextNode) + thisNode.timeToFinish;
+            float H = Graph.GraphLogic.Distance(NextNode, goalNode);
             float F = G + H;
-
-            graph.Edges.G = G;
-            .H = H;
-            thisNode.F = F;
-
-
-
+                
+                var TempEdge = thisNode.GetEdge(NextNode);
+                 TempEdge.G = G;
+                 TempEdge.H = H;
+                 TempEdge.F = F;
+                 
+                 
         }
+        
+        Neighbours = Neighbours.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
         
         
         

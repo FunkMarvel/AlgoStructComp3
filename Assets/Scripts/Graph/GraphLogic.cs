@@ -39,7 +39,6 @@ namespace Graph
                 Nodes.Add(Instantiate(NodeObject, spawnPos, Quaternion.identity).GetComponent<Node>());
                 Nodes[i].SetNumberOfConnectedNodes(edgesPerNode);
                 Nodes[i].position = spawnPos;
-                Nodes[i].timeToFinish = 1;
                 Nodes[i].NodeID = i;
             }
             
@@ -109,6 +108,11 @@ namespace Graph
                 }
             }
             return null;
+        }
+
+        public float Distance(Node A, Node B)
+        {
+            return (A.position - B.position).magnitude;
         }
     }
 }

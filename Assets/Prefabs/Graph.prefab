@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4784726784176889411}
   - component: {fileID: 4784726784176889412}
+  - component: {fileID: -5091694969521899883}
   m_Layer: 0
   m_Name: Graph
   m_TagString: Untagged
@@ -48,4 +49,25 @@ MonoBehaviour:
   EdgeObject: {fileID: 9057616118498499149, guid: f3911c64701cbe945bdf76bc3b6ee66f, type: 3}
   Nodes: []
   Edges: []
+  edgeThicknessPercentage: 5
   graphBoundingCubeLength: 5
+--- !u!114 &-5091694969521899883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4784726784176889413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b309c20ca908f8a42885c52ba8641b00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GraphLogic: {fileID: 0}
+  closedMaterial: {fileID: 0}
+  openMaterial: {fileID: 0}
+  start: {fileID: 0}
+  end: {fileID: 0}
+  pathP: {fileID: 0}
+  CreatedNodes: []
+  Neighbours: []

@@ -68,13 +68,17 @@ public class AStarAlgo : MonoBehaviour
     // Start is called before the first frame update
     void BeginSearch()
     {
+        Debug.Log("BEFORE");
         startNode = graph.Nodes[0];
         goalNode = graph.Nodes[NumberOfNodes-1];
+        Debug.Log("ree");
+        
+        lastPos = startNode;
     }
 
     void Search(Node thisNode)
     {
-        if (thisNode.Equals(goalNode))
+        if (thisNode==goalNode)
         {
             done = true;
             return;
@@ -85,38 +89,59 @@ public class AStarAlgo : MonoBehaviour
             float G = GraphLogic.Distance(thisNode, NextNode) + thisNode.timeToFinish;
             float H = Graph.GraphLogic.Distance(NextNode, goalNode);
             float F = G + H;
-                
+            
+            
+          
                 var TempEdge = thisNode.GetEdge(NextNode);
-                 TempEdge.G = G;
-                 TempEdge.H = H;
-                 TempEdge.F = F;
+                TempEdge.UpdateEdge(G, H, F);
+                
                  
+                
+                    
+                 
+                
+                 if (TempEdge.bOpen)
+                 {
+                     Neighbours.Add(TempEdge);
+                 }
                  
         }
         
         Neighbours = Neighbours.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
+        Edge pm = Neighbours.ElementAt(0);
+        pm.bOpen = false;
         
+        Neighbours.RemoveAt(0);
+
+        foreach (Edge e in Neighbours)
+        {
+            e.SetColor(Color.blue);
+        }
         
-        
-       // float G = GraphLogic.Distance(thisNode,Edge)
+        pm.SetColor(Color.red);
+
+
+        lastPos = pm.connectedNodes.Find(e => e != thisNode);
 
 
     }
     void Start()
-    {
-        
-    }
-
-    private void Awake()
     {
         graph = FindObjectOfType<GraphLogic>();
         CreatedNodes = graph.Nodes;
         NumberOfNodes = graph.Nodes.Count;
     }
 
+    private void Awake()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
+        if (Input.GetKeyDown(KeyCode.C) && !done) Search(lastPos);
+       
     }
 }

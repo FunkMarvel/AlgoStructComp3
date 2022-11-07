@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
@@ -20,6 +21,17 @@ namespace Graph
 
         private LineRenderer _line;
 
+        public void UpdateEdge(float g, float h, float f)
+        {
+            G = g;
+            H = h;
+            F = f;
+            
+            TextMesh[] values = GetComponentsInChildren<TextMesh>();
+            values[0].text = "G: " + G.ToString("0.00");
+            values[1].text = "H: " + H.ToString("0.00");
+            values[2].text = "F: " + F.ToString("0.00");
+        }
         public Edge()
         {
             connectedNodes = new List<Node>(2);
@@ -28,7 +40,10 @@ namespace Graph
         void Start()
         {
             _objectTransform = GetComponent<Transform>();
+            _objectTransform.LookAt(Camera.main.transform);
         }
+
+       
 
         public void ConnectEdge(Node a, Node b, float edgeThicknessPercentage)
         {

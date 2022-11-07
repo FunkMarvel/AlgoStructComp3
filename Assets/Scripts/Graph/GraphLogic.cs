@@ -22,8 +22,16 @@ namespace Graph
 
         private void Awake()
         {
-            GenerateGraph(10,5);
+            GenerateGraph(20,3);
             var edge = Nodes[0].GetEdge(Nodes[numberOfNodes - 1]);
+
+           // if (edge) edge.SetColor(Color.red);
+        }
+
+        private void Start()
+        {
+            
+
         }
 
         public void GenerateGraph(int size, int edgesPerNode)

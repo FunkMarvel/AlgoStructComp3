@@ -12,6 +12,10 @@ namespace Graph
         public List<Node> connectedNodes;
 
         private Transform _objectTransform;
+        
+        public float G = 0f;
+        public float H = 0f;
+        public float F = 0f;
 
         private LineRenderer _line;
 

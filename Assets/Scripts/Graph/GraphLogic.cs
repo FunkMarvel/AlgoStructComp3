@@ -23,6 +23,8 @@ namespace Graph
         private void Awake()
         {
             GenerateGraph(10,5);
+            var edge = Nodes[0].GetEdge(Nodes[numberOfNodes - 1]);
+            if (edge) edge.SetColor(Color.red);
         }
 
         public void GenerateGraph(int size, int edgesPerNode)
@@ -94,19 +96,13 @@ namespace Graph
             Edges.Add(Instantiate(EdgeObject, a.position, Quaternion.identity).GetComponent<Edge>());
             Edges[numberOfEdges-1].ConnectEdge(a, b, edgeThicknessPercentage);
             Edges[numberOfEdges-1].EdgeID = numberOfEdges-1;
+            a.connectedEdges[b] = Edges[numberOfEdges - 1];
+            b.connectedEdges[a] = Edges[numberOfEdges - 1];
         }
 
         public Edge GetEdge(Node firstNode, Node secondNode)
         {
-            if (firstNode == secondNode) return null;
-            for (int i = 0; i < numberOfEdges; i++)
-            {
-                if ((Edges[i].connectedNodes[0] == firstNode && Edges[i].connectedNodes[1] == secondNode) ||
-                    (Edges[i].connectedNodes[0] == secondNode && Edges[i].connectedNodes[1] == firstNode))
-                {
-                    return Edges[i];
-                }
-            }
+            if (firstNode.connectedEdges.ContainsKey(secondNode)) return firstNode.connectedEdges[secondNode];
             return null;
         }
 

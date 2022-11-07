@@ -42,6 +42,12 @@ namespace Graph
         
             _line.SetPositions(points);
         }
+
+        public void SetColor(Color NewColor)
+        {
+            _line.startColor = NewColor;
+            _line.endColor = NewColor;
+        }
         
         public static bool operator==(Edge someEdge, Edge otherEdge)
         {

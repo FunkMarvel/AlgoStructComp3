@@ -14,6 +14,7 @@ namespace Graph
         public Vector3 position { get; set; } = Vector3.zero;
         public float timeToFinish { get; set; } = 0f;
         public List<Node> connectedNodes;
+        public Dictionary<Node, Edge> connectedEdges;
 
         private Transform _objectTransform;
 
@@ -21,6 +22,10 @@ namespace Graph
         private MaterialPropertyBlock _materialProperies;
         public Renderer renderer { get; set; }
         public NodeType type { get; set; } = NodeType.Blue;
+
+        public float G = 0f;
+        public float H = 0f;
+        public float F = 0f;
 
         public enum NodeType
         {
@@ -61,6 +66,7 @@ namespace Graph
         public Node()
         {
             connectedNodes = new List<Node>();
+            connectedEdges = new Dictionary<Node, Edge>();
         }
         // Start is called before the first frame update
         void Start()
@@ -74,20 +80,46 @@ namespace Graph
         {
             var index = Random.Range(0, 8);
             type = (NodeType)index;
-            Debug.Log("Type: " + type);
+
             timeToFinish = _timesTofinish[type];
             
             _materialProperies = new MaterialPropertyBlock();
             renderer = GetComponent<Renderer>();
             renderer.GetPropertyBlock(_materialProperies);
             _materialProperies.SetColor("_Color", colors[type]);
-            Debug.Log("Awake Type: " + type + " : " + colors[type]);
+
             renderer.SetPropertyBlock(_materialProperies);
         }
 
         public void SetNumberOfConnectedNodes(int numberOfConnectedNodes)
         {
             connectedNodes.Capacity = numberOfConnectedNodes;
+        }
+
+        public void SetColor(Color NewColor)
+        {
+            _materialProperies = new MaterialPropertyBlock();
+            renderer = GetComponent<Renderer>();
+            renderer.GetPropertyBlock(_materialProperies);
+            _materialProperies.SetColor("_Color", NewColor);
+
+            renderer.SetPropertyBlock(_materialProperies);
+        }
+
+        public void ResetColor()
+        {
+            _materialProperies = new MaterialPropertyBlock();
+            renderer = GetComponent<Renderer>();
+            renderer.GetPropertyBlock(_materialProperies);
+            _materialProperies.SetColor("_Color", colors[type]);
+
+            renderer.SetPropertyBlock(_materialProperies);
+        }
+
+        public Edge GetEdge(Node targetNode)
+        {
+            if (connectedEdges.ContainsKey(targetNode)) return connectedEdges[targetNode];
+            return null;
         }
         
         public static bool operator==(Node someNode, Node otherNode)

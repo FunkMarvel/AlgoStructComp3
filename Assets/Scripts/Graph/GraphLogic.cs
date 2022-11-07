@@ -24,7 +24,6 @@ namespace Graph
         {
             GenerateGraph(10,5);
             var edge = Nodes[0].GetEdge(Nodes[numberOfNodes - 1]);
-            if (edge) edge.SetColor(Color.red);
         }
 
         public void GenerateGraph(int size, int edgesPerNode)
@@ -57,7 +56,8 @@ namespace Graph
                 {
                     if (i == j) break;
                     if (Nodes[i].connectedNodes.Count >= numberOfEdgesPerNode) break;
-                    if (Nodes[i].connectedNodes.Contains(Nodes[j])) break;
+                    if (Nodes[j].connectedNodes.Count >= numberOfEdgesPerNode) continue;
+                    if (Nodes[i].connectedNodes.Contains(Nodes[j])) continue;
                     
                     CreateEdge(Nodes[i], Nodes[j]);
                 }

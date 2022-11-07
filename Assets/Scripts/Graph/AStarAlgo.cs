@@ -84,8 +84,11 @@ public class AStarAlgo : MonoBehaviour
             float G = GraphLogic.Distance(thisNode, edges) + thisNode.timeToFinish;
             float H = Graph.GraphLogic.Distance(edges, goalNode);
             float F = G + H;
-            
-             
+
+            graph.Edges.G = G;
+            .H = H;
+            thisNode.F = F;
+
 
 
         }

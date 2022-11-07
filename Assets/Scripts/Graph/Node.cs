@@ -14,6 +14,7 @@ namespace Graph
         public Vector3 position { get; set; } = Vector3.zero;
         public float timeToFinish { get; set; } = 0f;
         public List<Node> connectedNodes;
+        public Dictionary<Node, Edge> connectedEdges;
 
         private Transform _objectTransform;
 
@@ -61,6 +62,7 @@ namespace Graph
         public Node()
         {
             connectedNodes = new List<Node>();
+            connectedEdges = new Dictionary<Node, Edge>();
         }
         // Start is called before the first frame update
         void Start()
@@ -108,6 +110,12 @@ namespace Graph
             _materialProperies.SetColor("_Color", colors[type]);
 
             renderer.SetPropertyBlock(_materialProperies);
+        }
+
+        public Edge GetEdge(Node targetNode)
+        {
+            if (connectedEdges.ContainsKey(targetNode)) return connectedEdges[targetNode];
+            return null;
         }
         
         public static bool operator==(Node someNode, Node otherNode)

@@ -92,26 +92,20 @@ public class AStarAlgo : MonoBehaviour
             float H = Graph.GraphLogic.Distance(NextNode, goalNode);
             float F = G + H;
             
-            
-          
-                var TempEdge = thisNode.GetEdge(NextNode);
-                TempEdge.UpdateEdge(G, H, F);
+            var TempEdge = thisNode.GetEdge(NextNode);
+            TempEdge.UpdateEdge(G, H, F);
                 
-                 
-                
-                    
-                 
-                
-                 if (TempEdge.bOpen)
-                 {
-                     Neighbours.Add(TempEdge);
-                 }
-                 
+            if (TempEdge.bOpen)
+            {
+                TempEdge.parent = thisNode;
+                Neighbours.Add(TempEdge);
+            }
         }
         
         Neighbours = Neighbours.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
         Edge pm = Neighbours.ElementAt(0);
         pm.bOpen = false;
+        thisNode = pm.parent;
         
         Neighbours.RemoveAt(0);
 
@@ -122,7 +116,7 @@ public class AStarAlgo : MonoBehaviour
         
         pm.SetColor(Color.red);
 
-
+        if(!pm.connectedNodes.Contains(thisNode)) Debug.LogError("Edge-node mismatch! " + thisNode.NodeID + " : " + pm.EdgeID);
         lastPos = pm.connectedNodes.Find(e => e != thisNode);
         lastPos.parent = thisNode;
 

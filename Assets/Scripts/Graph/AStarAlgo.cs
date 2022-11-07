@@ -74,6 +74,8 @@ public class AStarAlgo : MonoBehaviour
         Debug.Log("ree");
         
         lastPos = startNode;
+        startNode.SetColor(Color.magenta);
+        goalNode.SetColor(Color.red);
     }
 
     void Search(Node thisNode)
@@ -122,8 +124,29 @@ public class AStarAlgo : MonoBehaviour
 
 
         lastPos = pm.connectedNodes.Find(e => e != thisNode);
+        lastPos.parent = thisNode;
 
+    }
+    
+    void GetPath()
+    {
+        //RemoveAllMarkers();
+        Node begin = lastPos;
 
+        while ((startNode !=begin))
+        {
+            Debug.Log("NodeNr: " + begin.NodeID);
+            var TempEdge = begin.GetEdge(begin.parent);
+            Debug.Log("Found Edge: " + TempEdge.EdgeID);
+            TempEdge.SetColor(Color.green);
+            begin = begin.parent;
+
+            if (begin.IsUnityNull())
+            {
+                break;
+            }
+        }
+        
     }
     void Start()
     {
@@ -142,6 +165,7 @@ public class AStarAlgo : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
         if (Input.GetKeyDown(KeyCode.C) && !done) Search(lastPos);
+        if (Input.GetKeyDown(KeyCode.M)) GetPath();
        
     }
 }

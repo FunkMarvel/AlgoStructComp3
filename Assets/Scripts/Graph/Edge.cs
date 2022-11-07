@@ -8,10 +8,11 @@ namespace Graph
     [RequireComponent(typeof(LineRenderer))]
     public class Edge : MonoBehaviour
     {
-        public int EdgeID { get; set; } = 0;
+        public int EdgeID = -1;
         public int timeToFinish { get; set; } = 0;
         public List<Node> connectedNodes;
         public bool bOpen = true;
+        public Node parent = null;
 
         private Transform _objectTransform;
         

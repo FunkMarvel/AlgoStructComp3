@@ -22,6 +22,7 @@ namespace Graph
 
         private LineRenderer _line;
 
+        // ReSharper disable Unity.PerformanceAnalysis
         public void UpdateEdge(float g, float h, float f)
         {
             G = g;

@@ -9,7 +9,7 @@ namespace Graph
     public class Edge : MonoBehaviour
     {
         public int EdgeID = -1;
-        public int timeToFinish { get; set; } = 0;
+        public float timeToFinish { get; set; } = 0;
         public List<Node> connectedNodes;
         public bool bOpen = true;
         public Node parent = null;
@@ -62,6 +62,7 @@ namespace Graph
             points[1] = b.position;
         
             _line.SetPositions(points);
+            timeToFinish = (a.position - b.position).magnitude;
         }
 
         public void SetColor(Color NewColor)

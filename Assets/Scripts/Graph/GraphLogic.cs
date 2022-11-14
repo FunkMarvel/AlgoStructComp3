@@ -11,6 +11,8 @@ namespace Graph
         public GameObject EdgeObject;
         public List<Node> Nodes;
         public List<Edge> Edges;
+        public Node TSPStart;
+        public Node TSPEnd;
 
         public float edgeThicknessPercentage = 0.05f * 100;
 

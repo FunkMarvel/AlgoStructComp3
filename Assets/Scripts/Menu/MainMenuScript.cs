@@ -167,7 +167,7 @@ namespace Menu
             if (_dataInstance)
             {
                 _dataInstance.NumberOfNodes = numberNodes;
-                if (numberEdgesPerNode > numberNodes - 1) numberEdgesPerNode = numberNodes - 1;
+                if (numberEdgesPerNode > numberNodes - 1) numberEdgesPerNode = numberNodes;
                 if (numberEdgesPerNode < 2) numberEdgesPerNode = 2;
                 _dataInstance.NumberOfEdgesPerNode = numberEdgesPerNode;
                 _dataInstance.ChosenAlgorithm = _chosenAlgorithm;
@@ -233,6 +233,7 @@ namespace Menu
         public void OnStartTsp()
         {
             _chosenAlgorithm = DataInstance.Algorithm.TSP;
+            numberEdgesPerNode = numberNodes;
             LoadGraph();
         }
 

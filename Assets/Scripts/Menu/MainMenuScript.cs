@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-    public string graphLevel = "Graph Scene";
+    public const string GraphLevel = "Graph Scene";
 
     public GameObject shortestPathScreen;
     public GameObject travlingSalesmanScreen;
@@ -15,6 +15,9 @@ public class MainMenuScript : MonoBehaviour
 
     public int numberNodes = 20;
     public int numberEdgesPerNode = 5;
+
+    private DataInstance _dataInstance;
+    private DataInstance.Algorithm chosenAlgorithm;
 
     public enum MenuState
     {
@@ -144,25 +147,25 @@ public class MainMenuScript : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
     private void Awake()
     {
+        _dataInstance = FindObjectOfType<DataInstance>();
         if (shortestPathScreen) shortestPathScreen.SetActive(false);
         if (travlingSalesmanScreen) travlingSalesmanScreen.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
     public void LoadGraph()
     {
-        SceneManager.LoadScene(graphLevel);
+        if (_dataInstance)
+        {
+            _dataInstance.NumberOfNodes = numberNodes;
+            if (numberEdgesPerNode > numberNodes - 1) numberEdgesPerNode = numberNodes - 1;
+            if (numberEdgesPerNode < 2) numberEdgesPerNode = 2;
+            _dataInstance.NumberOfEdgesPerNode = numberEdgesPerNode;
+            _dataInstance.ChosenAlgorithm = chosenAlgorithm;
+        }
+
+        SceneManager.LoadScene(GraphLevel);
     }
 
     public void OnShortestPath()
@@ -206,6 +209,24 @@ public class MainMenuScript : MonoBehaviour
             case MenuState.TravelingSalesmanState:
                 break;
         }
+    }
+
+    public void OnDijkstra()
+    {
+        chosenAlgorithm = DataInstance.Algorithm.Dijkstra;
+        LoadGraph();
+    }
+    
+    public void OnAStar()
+    {
+        chosenAlgorithm = DataInstance.Algorithm.AStar;
+        LoadGraph();
+    }
+    
+    public void OnTSP()
+    {
+        chosenAlgorithm = DataInstance.Algorithm.TSP;
+        LoadGraph();
     }
 
     public void OnBack()

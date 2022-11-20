@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -48,13 +50,14 @@ namespace Graph
         public int NodeID = -1;
         public List<Node> connectedNodes;
 
-        public Node parent;
+        [CanBeNull] public Node parent = null;
         private MaterialPropertyBlock _materialProperies;
 
         private MeshFilter _mesh;
 
         private Transform _objectTransform;
         public Dictionary<Node, Edge> connectedEdges;
+        public bool bVisited = false;
 
         public Node()
         {
@@ -117,6 +120,7 @@ namespace Graph
 
         public Edge GetEdge(Node targetNode)
         {
+            if (targetNode.IsUnityNull()) return null;
             if (connectedEdges.ContainsKey(targetNode)) return connectedEdges[targetNode];
             return null;
         }

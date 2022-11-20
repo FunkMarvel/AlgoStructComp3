@@ -17,6 +17,7 @@ namespace Graph
         public float F;
 
         private LineRenderer _line;
+        private Color _currentColor = Color.white;
 
         private Transform _objectTransform;
 
@@ -68,8 +69,23 @@ namespace Graph
 
         public void SetColor(Color NewColor)
         {
+            _currentColor = NewColor;
             _line.startColor = NewColor;
             _line.endColor = NewColor;
+        }
+
+        public void IsVisible(bool bVisible)
+        {
+            if (!bVisible)
+            {
+                _line.startColor = Color.clear;
+                _line.endColor = Color.clear;
+            }
+            else
+            {
+                _line.startColor = _currentColor;
+                _line.endColor = _currentColor;
+            }
         }
 
         public static bool operator ==(Edge someEdge, Edge otherEdge)

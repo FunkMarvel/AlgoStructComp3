@@ -15,15 +15,6 @@ using Edge = Graph.Edge;
 
 public class Dijkstra : MonoBehaviour
 {
-    public GraphLogic GraphLogic;
-    public Material closedMaterial;
-    public Material openMaterial;
-    
-    
-    public GameObject start;
-    public GameObject end;
-    public GameObject pathP;
-
     private GraphLogic graph;
     
     private Node goalNode;
@@ -123,7 +114,7 @@ public class Dijkstra : MonoBehaviour
     }
     void Start()
     {
-        if (graph._currentAlgorithm == DataInstance.Algorithm.Dijkstra)
+        if (graph.currentAlgorithm == DataInstance.Algorithm.Dijkstra)
         {
             BeginSearch();
         }

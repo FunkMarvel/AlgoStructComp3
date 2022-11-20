@@ -9,50 +9,8 @@ using Graph;
 using Unity.VisualScripting;
 using Edge = Graph.Edge;
 
-
-public class PathMarker
-{
-    public GraphLogic location;
-    public float G;
-    public float H;
-    public float F;
-    public GameObject marker;
-    public PathMarker parent;
-
-    public PathMarker(GraphLogic l, float g, float h, float f, GameObject marker, PathMarker p)
-    {
-        location = l;
-        G = g;
-        H = h;
-        F = f;
-        this.marker = marker;
-        parent = p;
-    }
-
-    public override bool Equals(object obj)
-    {
-        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
-            return false;
-        else
-            return location.Equals(((PathMarker)obj).location);
-    }
-
-    public override int GetHashCode()
-    {
-        return 0;
-    }
-}
 public class AStarAlgo : MonoBehaviour
 {
-    public GraphLogic GraphLogic;
-    public Material closedMaterial;
-    public Material openMaterial;
-    
-    
-    public GameObject start;
-    public GameObject end;
-    public GameObject pathP;
-
     private GraphLogic graph;
     
     private Node goalNode;
@@ -152,7 +110,7 @@ public class AStarAlgo : MonoBehaviour
     }
     void Start()
     {
-        if (graph._currentAlgorithm == DataInstance.Algorithm.AStar)
+        if (graph.currentAlgorithm == DataInstance.Algorithm.AStar)
         {
             BeginSearch();
         }

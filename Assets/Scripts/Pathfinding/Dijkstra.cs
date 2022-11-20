@@ -1,118 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using Graph;
 using Unity.VisualScripting;
+using UnityEngine;
 using Edge = Graph.Edge;
 
 public class Dijkstra : MonoBehaviour
 {
-    private GraphLogic graph;
-    
+    public List<Node> CreatedNodes;
+    public List<Edge> openEdges = new();
+    private readonly float _searchInterval = 0.5f;
+
+    private float _searchTimer;
+    private bool bGotPath;
+    private bool done;
+
     private Node goalNode;
-    private Node startNode;
+    private GraphLogic graph;
+    private Node lastPos;
 
     private int NumberOfNodes;
-    private Node lastPos;
-    private bool done = false;
-    private bool bGotPath = false;
-    
-    private float _searchTimer = 0f;
-    private float _searchInterval = 0.5f;
+    private Node startNode;
 
-    public List<Node> CreatedNodes;
-    public List<Edge> Neighbours = new List<Edge>();
-
-    // Start is called before the first frame update
-    void BeginSearch()
+    private void Awake()
     {
-        CreatedNodes = graph.Nodes;
-        NumberOfNodes = graph.Nodes.Count;
-        
-        Debug.Log("Antall nodes: " + NumberOfNodes);
-        Debug.Log("BEFORE");
-        startNode = graph.Nodes[0];
-        goalNode = graph.Nodes[NumberOfNodes-1];
-        Debug.Log("ree");
-        
-        lastPos = startNode;
-        startNode.SetColor(Color.magenta);
-        goalNode.SetColor(Color.red);
+        graph = FindObjectOfType<GraphLogic>();
     }
 
-    void Search(Node thisNode)
-    {
-        if (thisNode==goalNode)
-        {
-            done = true;
-            return;
-        }
-
-        foreach (Node NextNode in thisNode.connectedNodes)
-        {
-            float G = thisNode.timeToFinish;
-            float H = GraphLogic.Distance(thisNode, NextNode);
-            float F = G + H;
-            
-            var TempEdge = thisNode.GetEdge(NextNode);
-            TempEdge.UpdateEdge(G, H, F);
-                
-            if (TempEdge.bOpen)
-            {
-                TempEdge.parent = thisNode;
-                Neighbours.Add(TempEdge);
-            }
-        }
-        
-        Neighbours = Neighbours.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
-        Edge pm = Neighbours.ElementAt(0);
-        pm.bOpen = false;
-        thisNode = pm.parent;
-        
-        Neighbours.RemoveAt(0);
-
-        foreach (Edge e in Neighbours)
-        {
-            e.SetColor(Color.blue);
-        }
-        
-        pm.SetColor(Color.red);
-
-        if(!pm.connectedNodes.Contains(thisNode)) Debug.LogError("Edge-node mismatch! " + thisNode.NodeID + " : " + pm.EdgeID);
-        lastPos = pm.connectedNodes.Find(e => e != thisNode);
-        lastPos.parent = thisNode;
-
-    }
-    
-    void GetPath()
-    {
-        //RemoveAllMarkers();
-        Node begin = lastPos;
-
-        while ((startNode !=begin))
-        {
-            Debug.Log("NodeNr: " + begin.NodeID);
-            var TempEdge = begin.GetEdge(begin.parent);
-            Debug.Log("Found Edge: " + TempEdge.EdgeID);
-            TempEdge.SetColor(Color.green);
-            begin = begin.parent;
-
-            if (begin.IsUnityNull())
-            {
-                break;
-            }
-        }
-        
-    }
-    void Start()
+    private void Start()
     {
         if (graph.currentAlgorithm == DataInstance.Algorithm.Dijkstra)
         {
@@ -125,15 +40,9 @@ public class Dijkstra : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        graph = FindObjectOfType<GraphLogic>();
-    }
-
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
         if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
         if (Input.GetKeyDown(KeyCode.C) && !done) Search(lastPos);
         if (Input.GetKeyDown(KeyCode.M)) GetPath();
@@ -147,13 +56,86 @@ public class Dijkstra : MonoBehaviour
             _searchTimer = 0f;
             Search(lastPos);
         }
-        
+
         if (done && !bGotPath)
         {
             GetPath();
             bGotPath = true;
         }
-       
+    }
+
+    // Start is called before the first frame update
+    private void BeginSearch()
+    {
+        CreatedNodes = graph.Nodes;
+        NumberOfNodes = graph.Nodes.Count;
+
+        Debug.Log("Antall nodes: " + NumberOfNodes);
+        Debug.Log("BEFORE");
+        startNode = graph.Nodes[0];
+        goalNode = graph.Nodes[NumberOfNodes - 1];
+        Debug.Log("ree");
+
+        lastPos = startNode;
+        startNode.SetColor(Color.magenta);
+        goalNode.SetColor(Color.red);
+    }
+
+    private void Search(Node thisNode)
+    {
+        if (thisNode == goalNode)
+        {
+            done = true;
+            return;
+        }
+
+        foreach (var NextNode in thisNode.connectedNodes)
+        {
+            var G = thisNode.timeToFinish;
+            var H = GraphLogic.Distance(thisNode, NextNode);
+            var F = G + H;
+
+            var TempEdge = thisNode.GetEdge(NextNode);
+            TempEdge.UpdateEdge(G, H, F);
+
+            if (TempEdge.bOpen)
+            {
+                TempEdge.parent = thisNode;
+                openEdges.Add(TempEdge);
+            }
+        }
+
+        openEdges = openEdges.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
+        var pm = openEdges.ElementAt(0);
+        pm.bOpen = false;
+        thisNode = pm.parent;
+
+        openEdges.RemoveAt(0);
+
+        foreach (var e in openEdges) e.SetColor(Color.blue);
+
+        pm.SetColor(Color.red);
+
+        if (!pm.connectedNodes.Contains(thisNode))
+            Debug.LogError("Edge-node mismatch! " + thisNode.NodeID + " : " + pm.EdgeID);
+        lastPos = pm.connectedNodes.Find(e => e != thisNode);
+        lastPos.parent = thisNode;
+    }
+
+    private void GetPath()
+    {
+        //RemoveAllMarkers();
+        var begin = lastPos;
+
+        while (startNode != begin)
+        {
+            Debug.Log("NodeNr: " + begin.NodeID);
+            var TempEdge = begin.GetEdge(begin.parent);
+            Debug.Log("Found Edge: " + TempEdge.EdgeID);
+            TempEdge.SetColor(Color.green);
+            begin = begin.parent;
+
+            if (begin.IsUnityNull()) break;
+        }
     }
 }
-

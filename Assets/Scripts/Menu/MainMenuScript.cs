@@ -4,6 +4,13 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
+    public enum MenuState
+    {
+        MainMenuState,
+        ShortestPathState,
+        TravelingSalesmanState
+    }
+
     public const string GraphLevel = "Graph Scene";
 
     public GameObject shortestPathScreen;
@@ -16,25 +23,25 @@ public class MainMenuScript : MonoBehaviour
     public int numberNodes = 20;
     public int numberEdgesPerNode = 5;
 
+    public MenuState currentState = MenuState.MainMenuState;
+
+    private bool _bEnteringState;
+
     private DataInstance _dataInstance;
     private DataInstance.Algorithm chosenAlgorithm;
 
-    public enum MenuState
+    private void Awake()
     {
-        MainMenuState,
-        ShortestPathState,
-        TravelingSalesmanState
+        _dataInstance = FindObjectOfType<DataInstance>();
+        if (shortestPathScreen) shortestPathScreen.SetActive(false);
+        if (travlingSalesmanScreen) travlingSalesmanScreen.SetActive(false);
     }
-
-    public MenuState currentState = MenuState.MainMenuState;
-
-    private bool _bEnteringState = false;
 
     public void OnChangeNumberNodes()
     {
-        int fieldValue = 0;
+        var fieldValue = 0;
         int.TryParse(numNodesShort.text, out fieldValue);
-        
+
         switch (currentState)
         {
             case MenuState.ShortestPathState:
@@ -57,7 +64,7 @@ public class MainMenuScript : MonoBehaviour
                 }
 
                 break;
-            
+
             case MenuState.TravelingSalesmanState:
                 if (numNodesShort)
                 {
@@ -83,9 +90,9 @@ public class MainMenuScript : MonoBehaviour
 
     public void OnChangeNumEdgesPerNode()
     {
-        int fieldValue = 0;
+        var fieldValue = 0;
         int.TryParse(numNodesShort.text, out fieldValue);
-        
+
         switch (currentState)
         {
             case MenuState.ShortestPathState:
@@ -96,9 +103,9 @@ public class MainMenuScript : MonoBehaviour
                         numberEdgesPerNode = 2;
                         numEdgesShort.text = "2";
                     }
-                    else if (fieldValue > numberNodes-1)
+                    else if (fieldValue > numberNodes - 1)
                     {
-                        numberEdgesPerNode = numberNodes-1;
+                        numberEdgesPerNode = numberNodes - 1;
                         numEdgesShort.text = "25";
                     }
                     else
@@ -108,7 +115,7 @@ public class MainMenuScript : MonoBehaviour
                 }
 
                 break;
-            
+
             case MenuState.TravelingSalesmanState:
                 if (numNodesShort)
                 {
@@ -147,13 +154,6 @@ public class MainMenuScript : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        _dataInstance = FindObjectOfType<DataInstance>();
-        if (shortestPathScreen) shortestPathScreen.SetActive(false);
-        if (travlingSalesmanScreen) travlingSalesmanScreen.SetActive(false);
-    }
-
     public void LoadGraph()
     {
         if (_dataInstance)
@@ -179,6 +179,7 @@ public class MainMenuScript : MonoBehaviour
                     shortestPathScreen.SetActive(true);
                     _bEnteringState = false;
                 }
+
                 break;
             case MenuState.ShortestPathState:
                 break;
@@ -190,12 +191,9 @@ public class MainMenuScript : MonoBehaviour
         if (currentState == MenuState.MainMenuState)
         {
             ChangeState(MenuState.TravelingSalesmanState);
-            if (_bEnteringState)
-            {
-                travlingSalesmanScreen.SetActive(true);
-            }
+            if (_bEnteringState) travlingSalesmanScreen.SetActive(true);
         }
-        
+
         switch (currentState)
         {
             case MenuState.MainMenuState:
@@ -205,6 +203,7 @@ public class MainMenuScript : MonoBehaviour
                     travlingSalesmanScreen.SetActive(true);
                     _bEnteringState = false;
                 }
+
                 break;
             case MenuState.TravelingSalesmanState:
                 break;
@@ -216,13 +215,13 @@ public class MainMenuScript : MonoBehaviour
         chosenAlgorithm = DataInstance.Algorithm.Dijkstra;
         LoadGraph();
     }
-    
+
     public void OnAStar()
     {
         chosenAlgorithm = DataInstance.Algorithm.AStar;
         LoadGraph();
     }
-    
+
     public void OnTSP()
     {
         chosenAlgorithm = DataInstance.Algorithm.TSP;

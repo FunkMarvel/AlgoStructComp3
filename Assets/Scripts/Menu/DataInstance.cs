@@ -1,15 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DataInstance : MonoBehaviour
 {
-    public static DataInstance Instance { get; private set; }
-    public int? NumberOfNodes = null;
-    public int? NumberOfEdgesPerNode = null;
-    
     public enum Algorithm
     {
         Dijkstra,
@@ -18,6 +10,9 @@ public class DataInstance : MonoBehaviour
     }
 
     public Algorithm? ChosenAlgorithm = null;
+    public int? NumberOfEdgesPerNode = null;
+    public int? NumberOfNodes = null;
+    public static DataInstance Instance { get; private set; }
 
     private void Awake()
     {

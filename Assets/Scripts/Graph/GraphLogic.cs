@@ -22,7 +22,7 @@ namespace Graph
 
         public float graphBoundingCubeLength;
         private DataInstance _dataInstance;
-        public DataInstance.Algorithm _currentAlgorithm = DataInstance.Algorithm.AStar;
+        public DataInstance.Algorithm currentAlgorithm = DataInstance.Algorithm.AStar;
 
 
         private void Awake()
@@ -43,7 +43,7 @@ namespace Graph
 
                 if (_dataInstance.ChosenAlgorithm != null)
                 {
-                    _currentAlgorithm = (DataInstance.Algorithm)_dataInstance.ChosenAlgorithm;
+                    currentAlgorithm = (DataInstance.Algorithm)_dataInstance.ChosenAlgorithm;
                 }
             }
             else

@@ -78,15 +78,15 @@ public class MainMenuScript : MonoBehaviour
         }
     }
 
-    public void OnChangeNumEdges()
+    public void OnChangeNumEdgesPerNode()
     {
         int fieldValue = 0;
-        int.TryParse(numEdgesShort.text, out fieldValue);
-
+        int.TryParse(numNodesShort.text, out fieldValue);
+        
         switch (currentState)
         {
             case MenuState.ShortestPathState:
-                if (numNodesShort)
+                if (numEdgesShort)
                 {
                     if (fieldValue < 2)
                     {
@@ -96,11 +96,11 @@ public class MainMenuScript : MonoBehaviour
                     else if (fieldValue > numberNodes-1)
                     {
                         numberEdgesPerNode = numberNodes-1;
-                        numEdgesShort.text = "100";
+                        numEdgesShort.text = "25";
                     }
                     else
                     {
-                        numberNodes = fieldValue;
+                        numberEdgesPerNode = fieldValue;
                     }
                 }
 
@@ -126,15 +126,6 @@ public class MainMenuScript : MonoBehaviour
                 }
 
                 break;
-        }
-    }
-
-    public void OnChangeNumEdgesPerNode()
-    {
-        if (currentState == MenuState.TravelingSalesmanState && numEdgesShort)
-        {
-            int fieldValue = 0;
-            int.TryParse(numEdgesShort.text, out fieldValue);
         }
     }
 

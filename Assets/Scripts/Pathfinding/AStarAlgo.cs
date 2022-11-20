@@ -12,8 +12,6 @@ namespace Pathfinding
         public List<Node> createdNodes;
         public List<Edge> openEdges = new();
         private readonly float _searchInterval = 0.5f;
-
-        private float _searchTimer;
         private bool _bGotPath;
         private bool _done;
 
@@ -22,6 +20,8 @@ namespace Pathfinding
         private Node _lastPos;
 
         private int _numberOfNodes;
+
+        private float _searchTimer;
         private Node _startNode;
 
         private void Awake()
@@ -90,7 +90,7 @@ namespace Pathfinding
         private void Search(Node thisNode)
         {
             if (_done) return;
-            
+
             if (thisNode == _goalNode)
             {
                 _done = true;
@@ -105,13 +105,9 @@ namespace Pathfinding
 
                 var tempEdge = thisNode.GetEdge(nextNode);
                 if (tempEdge)
-                {
                     Debug.Log("got edge " + tempEdge.edgeID);
-                }
                 else
-                {
                     Debug.Log("did not get edge: ");
-                }
                 tempEdge.UpdateEdge(G, H, F);
 
                 if (tempEdge.bOpen)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +14,9 @@ namespace Graph
         public float G;
         public float H;
         public float F;
+        private Color _currentColor = Color.white;
 
         private LineRenderer _line;
-        private Color _currentColor = Color.white;
 
         private Transform _objectTransform;
 

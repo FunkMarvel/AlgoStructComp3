@@ -28,9 +28,9 @@ namespace Menu
         public MenuState currentState = MenuState.MainMenuState;
 
         private bool _bEnteringState;
+        private DataInstance.Algorithm _chosenAlgorithm;
 
         private DataInstance _dataInstance;
-        private DataInstance.Algorithm _chosenAlgorithm;
 
         private void Awake()
         {
@@ -48,7 +48,7 @@ namespace Menu
                     {
                         var fieldValue = 0;
                         int.TryParse(numNodesShort.text, out fieldValue);
-                        
+
                         if (fieldValue < 2)
                         {
                             numberNodes = 2;
@@ -72,7 +72,7 @@ namespace Menu
                     {
                         var fieldValue = 0;
                         int.TryParse(numNodesTsp.text, out fieldValue);
-                        
+
                         if (fieldValue < 2)
                         {
                             numberNodes = 2;

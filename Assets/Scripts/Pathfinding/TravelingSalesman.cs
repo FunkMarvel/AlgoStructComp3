@@ -6,26 +6,25 @@ using UnityEngine;
 
 public class TravelingSalesman : MonoBehaviour
 {
-
     public enum TSPMethod
     {
         NearestNeighbour
     }
-    
-    private readonly float _searchInterval = 0.5f;
-    private float _searchTimer;
-    
-    private GraphLogic _graph;
-    private bool _done = false;
-    private bool _bGotPath = false;
-
-    private Node _startNode;
-    private Node _currentNode;
 
     public TSPMethod currentMethod = TSPMethod.NearestNeighbour;
-    public List<List<float>> costMatrix;
 
-    public float minCost = 0;
+    public float minCost;
+
+    private readonly float _searchInterval = 0.5f;
+    private bool _bGotPath;
+    private Node _currentNode;
+    private bool _done;
+
+    private GraphLogic _graph;
+    private float _searchTimer;
+
+    private Node _startNode;
+    public List<List<float>> costMatrix;
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class TravelingSalesman : MonoBehaviour
 
         costMatrix = new List<List<float>>();
         costMatrix.Capacity = _graph.NumberOfNodes;
-        
+
         for (var i = 0; i < _graph.NumberOfNodes; i++)
         {
             var column = new List<float>();
@@ -48,17 +47,13 @@ public class TravelingSalesman : MonoBehaviour
                     column.Add(0f);
                     continue;
                 }
-                
+
                 var edge = _graph.nodes[i].GetEdge(_graph.nodes[j]);
 
                 if (edge)
-                {
                     column.Add(edge.timeToFinish);
-                }
                 else
-                {
                     column.Add(float.MaxValue);
-                }
             }
 
             costMatrix.Add(column);
@@ -79,6 +74,11 @@ public class TravelingSalesman : MonoBehaviour
         }
     }
 
+    // Update is called once per frame
+    private void Update()
+    {
+    }
+
     private void BeginSearch()
     {
         switch (currentMethod)
@@ -89,7 +89,8 @@ public class TravelingSalesman : MonoBehaviour
                 NearestNeighbourIterate(_startNode);
                 break;
         }
-        _startNode.GetEdge(_startNode.parent).UpdateEdge(minCost,0f,0f);
+
+        _startNode.GetEdge(_startNode.parent).UpdateEdge(minCost, 0f, 0f);
 
         foreach (var edge in _graph.edges)
         {
@@ -102,16 +103,10 @@ public class TravelingSalesman : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-    }
-
     private void NearestNeighbourIterate(Node someNode)
     {
         if (someNode.parent.IsUnityNull())
         {
-            
         }
         else if (someNode.parent != _startNode && someNode == _startNode)
         {
@@ -121,27 +116,27 @@ public class TravelingSalesman : MonoBehaviour
             Debug.Log("reached node: " + someNode.NodeID);
             return;
         }
-        
+
         var neighbours = costMatrix[someNode.NodeID];
 
-        float minVal = float.MaxValue;
-        int minIndex = -1;
-        
-        for (int i = 0; i < neighbours.Count; i++)
-        {
+        var minVal = float.MaxValue;
+        var minIndex = -1;
+
+        for (var i = 0; i < neighbours.Count; i++)
             if (neighbours[i] < minVal && someNode.NodeID != i)
             {
                 if (_graph.nodes[i].bVisited) continue;
                 minVal = neighbours[i];
                 minIndex = i;
             }
-        }
 
         if (minIndex < 0)
         {
             _done = true;
             minIndex = 0;
-        };
+        }
+
+        ;
 
         minCost += costMatrix[someNode.NodeID][minIndex];
 
@@ -149,19 +144,20 @@ public class TravelingSalesman : MonoBehaviour
         someNode = _graph.nodes[minIndex];
         someNode.parent = tempNode;
         tempNode.bVisited = true;
-        
-        Debug.Log("moving from node " + tempNode.NodeID+ " to node " + someNode.NodeID + " and is done?: " + _done);
-        
+
+        Debug.Log("moving from node " + tempNode.NodeID + " to node " + someNode.NodeID + " and is done?: " + _done);
+
         tempNode.GetEdge(someNode).SetColor(Color.red);
-        
+
         NearestNeighbourIterate(someNode);
-        
+
         if (_done && someNode == _startNode)
         {
             _bGotPath = true;
             Debug.Log("End on node: " + someNode.NodeID);
             return;
         }
+
         if (_done && !someNode.parent.IsUnityNull())
         {
             var tempEdge = someNode.GetEdge(someNode.parent);

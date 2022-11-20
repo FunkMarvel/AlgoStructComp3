@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MainMenuScript : MonoBehaviour
 {
@@ -14,8 +10,8 @@ public class MainMenuScript : MonoBehaviour
     public GameObject travlingSalesmanScreen;
 
     public TMP_InputField numNodesShort;
-    public InputField numEdgesShort;
-    public InputField numNodesTsp;
+    public TMP_InputField numNodesTSP;
+    public TMP_InputField numEdgesShort;
 
     public int numberNodes = 20;
     public int numberEdgesPerNode = 5;
@@ -60,17 +56,68 @@ public class MainMenuScript : MonoBehaviour
                 break;
             
             case MenuState.TravelingSalesmanState:
-                if (numNodesTsp)
+                if (numNodesShort)
                 {
                     if (fieldValue < 2)
                     {
                         numberNodes = 2;
-                        numNodesShort.text = "2";
+                        numNodesTSP.text = "2";
                     }
                     else if (fieldValue > 25)
                     {
                         numberNodes = 25;
-                        numNodesShort.text = "25";
+                        numNodesTSP.text = "25";
+                    }
+                    else
+                    {
+                        numberNodes = fieldValue;
+                    }
+                }
+
+                break;
+        }
+    }
+
+    public void OnChangeNumEdges()
+    {
+        int fieldValue = 0;
+        int.TryParse(numEdgesShort.text, out fieldValue);
+
+        switch (currentState)
+        {
+            case MenuState.ShortestPathState:
+                if (numNodesShort)
+                {
+                    if (fieldValue < 2)
+                    {
+                        numberEdgesPerNode = 2;
+                        numEdgesShort.text = "2";
+                    }
+                    else if (fieldValue > numberNodes-1)
+                    {
+                        numberEdgesPerNode = numberNodes-1;
+                        numEdgesShort.text = "100";
+                    }
+                    else
+                    {
+                        numberNodes = fieldValue;
+                    }
+                }
+
+                break;
+            
+            case MenuState.TravelingSalesmanState:
+                if (numNodesShort)
+                {
+                    if (fieldValue < 2)
+                    {
+                        numberNodes = 2;
+                        numNodesTSP.text = "2";
+                    }
+                    else if (fieldValue > 25)
+                    {
+                        numberNodes = 25;
+                        numNodesTSP.text = "25";
                     }
                     else
                     {

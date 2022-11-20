@@ -21,10 +21,37 @@ namespace Graph
         public int numberOfEdgesPerNode { get; private set; }
 
         public float graphBoundingCubeLength;
+        private DataInstance _dataInstance;
+        public DataInstance.Algorithm _currentAlgorithm = DataInstance.Algorithm.AStar;
+
 
         private void Awake()
         {
-            GenerateGraph(20,3);
+            _dataInstance = FindObjectOfType<DataInstance>();
+            if (_dataInstance)
+            {
+                if (_dataInstance.NumberOfNodes != null && _dataInstance.NumberOfEdgesPerNode != null)
+                {
+                    GenerateGraph((int)_dataInstance.NumberOfNodes, (int)_dataInstance.NumberOfEdgesPerNode);
+                    Debug.Log("DataExist: " + _dataInstance.NumberOfNodes + " " + _dataInstance.NumberOfEdgesPerNode);
+                }
+                else
+                {
+                    GenerateGraph(20,3);
+                    Debug.Log("DataExist default: " + _dataInstance.NumberOfNodes + " " + _dataInstance.NumberOfEdgesPerNode);
+                }
+
+                if (_dataInstance.ChosenAlgorithm != null)
+                {
+                    _currentAlgorithm = (DataInstance.Algorithm)_dataInstance.ChosenAlgorithm;
+                }
+            }
+            else
+            {
+                GenerateGraph(20,3);
+                Debug.Log("DataNotExist default: 20 3");
+            }
+
             var edge = Nodes[0].GetEdge(Nodes[numberOfNodes - 1]);
 
            // if (edge) edge.SetColor(Color.red);
@@ -33,7 +60,11 @@ namespace Graph
         private void Start()
         {
             
+        }
 
+        private void Update()
+        {
+            
         }
 
         public void GenerateGraph(int size, int edgesPerNode)

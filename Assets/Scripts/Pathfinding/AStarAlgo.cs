@@ -61,6 +61,10 @@ public class AStarAlgo : MonoBehaviour
     private int NumberOfNodes;
     private Node lastPos;
     private bool done = false;
+    private bool bGotPath = false;
+    
+    private float _searchTimer = 0f;
+    private float _searchInterval = 0.5f;
 
     public List<Node> CreatedNodes;
     public List<Edge> Neighbours = new List<Edge>();
@@ -68,6 +72,10 @@ public class AStarAlgo : MonoBehaviour
     // Start is called before the first frame update
     void BeginSearch()
     {
+        CreatedNodes = graph.Nodes;
+        NumberOfNodes = graph.Nodes.Count;
+        
+        Debug.Log("Antall nodes: " + NumberOfNodes);
         Debug.Log("BEFORE");
         startNode = graph.Nodes[0];
         goalNode = graph.Nodes[NumberOfNodes-1];
@@ -144,22 +152,45 @@ public class AStarAlgo : MonoBehaviour
     }
     void Start()
     {
-        graph = FindObjectOfType<GraphLogic>();
-        CreatedNodes = graph.Nodes;
-        NumberOfNodes = graph.Nodes.Count;
+        if (graph._currentAlgorithm == DataInstance.Algorithm.AStar)
+        {
+            BeginSearch();
+        }
+        else
+        {
+            done = true;
+            bGotPath = true;
+        }
     }
 
     private void Awake()
     {
-        
+        graph = FindObjectOfType<GraphLogic>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
         if (Input.GetKeyDown(KeyCode.C) && !done) Search(lastPos);
         if (Input.GetKeyDown(KeyCode.M)) GetPath();
+
+        if (!done && _searchTimer < _searchInterval)
+        {
+            _searchTimer += Time.deltaTime;
+        }
+        else if (!done)
+        {
+            _searchTimer = 0f;
+            Search(lastPos);
+        }
+        
+        if (done && !bGotPath)
+        {
+            GetPath();
+            bGotPath = true;
+        }
        
     }
 }

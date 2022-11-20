@@ -58,8 +58,12 @@ namespace Pathfinding
                 _searchTimer = 0f;
                 Search(_lastPos);
             }
+            else if (_done && _searchTimer < _searchInterval)
+            {
+                _searchTimer += Time.deltaTime;
+            }
 
-            if (_done && !_bGotPath)
+            if (_done && !_bGotPath && _searchTimer >= _searchInterval)
             {
                 GetPath();
                 _bGotPath = true;
@@ -85,6 +89,8 @@ namespace Pathfinding
 
         private void Search(Node thisNode)
         {
+            if (_done) return;
+            
             if (thisNode == _goalNode)
             {
                 _done = true;
@@ -140,9 +146,9 @@ namespace Pathfinding
             while (_startNode != begin)
             {
                 Debug.Log("NodeNr: " + begin.NodeID);
-                var TempEdge = begin.GetEdge(begin.parent);
-                Debug.Log("Found Edge: " + TempEdge.edgeID);
-                TempEdge.SetColor(Color.green);
+                var tempEdge = begin.GetEdge(begin.parent);
+                Debug.Log("Found Edge: " + tempEdge.edgeID);
+                tempEdge.SetColor(Color.green);
                 begin = begin.parent;
 
                 if (begin.IsUnityNull()) break;

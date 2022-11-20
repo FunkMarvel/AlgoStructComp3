@@ -41,14 +41,14 @@ namespace Menu
 
         public void OnChangeNumberNodes()
         {
-            var fieldValue = 0;
-            int.TryParse(numNodesShort.text, out fieldValue);
-
             switch (currentState)
             {
                 case MenuState.ShortestPathState:
                     if (numNodesShort)
                     {
+                        var fieldValue = 0;
+                        int.TryParse(numNodesShort.text, out fieldValue);
+                        
                         if (fieldValue < 2)
                         {
                             numberNodes = 2;
@@ -68,21 +68,27 @@ namespace Menu
                     break;
 
                 case MenuState.TravelingSalesmanState:
-                    if (numNodesShort)
+                    if (numNodesTsp)
                     {
+                        var fieldValue = 0;
+                        int.TryParse(numNodesTsp.text, out fieldValue);
+                        
                         if (fieldValue < 2)
                         {
                             numberNodes = 2;
+                            numberEdgesPerNode = 1;
                             numNodesTsp.text = "2";
                         }
                         else if (fieldValue > 25)
                         {
                             numberNodes = 25;
+                            numberEdgesPerNode = 24;
                             numNodesTsp.text = "25";
                         }
                         else
                         {
                             numberNodes = fieldValue;
+                            numberEdgesPerNode = numberNodes - 1;
                         }
                     }
 
@@ -224,7 +230,7 @@ namespace Menu
             LoadGraph();
         }
 
-        public void OnTSP()
+        public void OnStartTsp()
         {
             _chosenAlgorithm = DataInstance.Algorithm.TSP;
             LoadGraph();

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Graph
 {
@@ -52,10 +54,12 @@ namespace Graph
 
         private void Start()
         {
+            
         }
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Backspace)) SceneManager.LoadScene("Main Menu");
         }
 
         public void GenerateGraph(int size, int edgesPerNode)

@@ -11,17 +11,17 @@ public class TravelingSalesman : MonoBehaviour
     {
         graph = FindObjectOfType<GraphLogic>();
 
-        graph.Nodes = graph.Nodes.OrderBy(Node => Node.NodeID).ToList();
+        graph.nodes = graph.nodes.OrderBy(Node => Node.NodeID).ToList();
 
         var costMatrix = new List<List<float>>();
-        for (var i = 0; i < graph.numberOfNodes; i++)
+        for (var i = 0; i < graph.NumberOfNodes; i++)
         {
             var column = new List<float>();
-            column.Capacity = graph.numberOfNodes;
+            column.Capacity = graph.NumberOfNodes;
 
-            for (var j = 0; j < graph.numberOfNodes; j++)
+            for (var j = 0; j < graph.NumberOfNodes; j++)
             {
-                var edge = graph.Nodes[i].GetEdge(graph.Nodes[j]);
+                var edge = graph.nodes[i].GetEdge(graph.nodes[j]);
                 if (i == j)
                     column[j] = 0f;
                 else if (edge)

@@ -5,12 +5,12 @@ namespace Graph
 {
     public class GraphLogic : MonoBehaviour
     {
-        public GameObject NodeObject;
-        public GameObject EdgeObject;
-        public List<Node> Nodes;
-        public List<Edge> Edges;
-        public Node TSPStart;
-        public Node TSPEnd;
+        public GameObject nodeObject;
+        public GameObject edgeObject;
+        public List<Node> nodes;
+        public List<Edge> edges;
+        public Node tspStart;
+        public Node tspEnd;
 
         public float edgeThicknessPercentage = 0.05f * 100;
 
@@ -18,9 +18,9 @@ namespace Graph
         public DataInstance.Algorithm currentAlgorithm = DataInstance.Algorithm.AStar;
         private DataInstance _dataInstance;
 
-        public int numberOfNodes { get; private set; }
-        public int numberOfEdges { get; private set; }
-        public int numberOfEdgesPerNode { get; private set; }
+        public int NumberOfNodes { get; private set; }
+        public int NumberOfEdges { get; private set; }
+        public int NumberOfEdgesPerNode { get; private set; }
 
 
         private void Awake()
@@ -48,10 +48,6 @@ namespace Graph
                 GenerateGraph(20, 3);
                 Debug.Log("DataNotExist default: 20 3");
             }
-
-            var edge = Nodes[0].GetEdge(Nodes[numberOfNodes - 1]);
-
-            // if (edge) edge.SetColor(Color.red);
         }
 
         private void Start()
@@ -64,34 +60,34 @@ namespace Graph
 
         public void GenerateGraph(int size, int edgesPerNode)
         {
-            numberOfNodes = size;
-            numberOfEdgesPerNode = edgesPerNode;
+            NumberOfNodes = size;
+            NumberOfEdgesPerNode = edgesPerNode;
 
-            Nodes = new List<Node>(numberOfNodes);
+            nodes = new List<Node>(NumberOfNodes);
 
             // create specified number of nodes
-            for (var i = 0; i < numberOfNodes; i++)
+            for (var i = 0; i < NumberOfNodes; i++)
             {
                 var spawnPos = RandPos();
-                Nodes.Add(Instantiate(NodeObject, spawnPos, Quaternion.identity).GetComponent<Node>());
-                Nodes[i].SetNumberOfConnectedNodes(edgesPerNode);
-                Nodes[i].position = spawnPos;
-                Nodes[i].NodeID = i;
+                nodes.Add(Instantiate(nodeObject, spawnPos, Quaternion.identity).GetComponent<Node>());
+                nodes[i].SetNumberOfConnectedNodes(edgesPerNode);
+                nodes[i].position = spawnPos;
+                nodes[i].NodeID = i;
             }
 
-            Shuffle(Nodes); // shuffle and connect nodes to create spanning tree
-            for (var i = 1; i < numberOfNodes; i++) CreateEdge(Nodes[i], Nodes[i - 1]);
+            Shuffle(nodes); // shuffle and connect nodes to create spanning tree
+            for (var i = 1; i < NumberOfNodes; i++) CreateEdge(nodes[i], nodes[i - 1]);
 
-            Shuffle(Nodes);
-            for (var i = 0; i < numberOfNodes; i++)
-            for (var j = 0; j < numberOfNodes; j++)
+            Shuffle(nodes);
+            for (var i = 0; i < NumberOfNodes; i++)
+            for (var j = 0; j < NumberOfNodes; j++)
             {
                 if (i == j) break;
-                if (Nodes[i].connectedNodes.Count >= numberOfEdgesPerNode) break;
-                if (Nodes[j].connectedNodes.Count >= numberOfEdgesPerNode) continue;
-                if (Nodes[i].connectedNodes.Contains(Nodes[j])) continue;
+                if (nodes[i].connectedNodes.Count >= NumberOfEdgesPerNode) break;
+                if (nodes[j].connectedNodes.Count >= NumberOfEdgesPerNode) continue;
+                if (nodes[i].connectedNodes.Contains(nodes[j])) continue;
 
-                CreateEdge(Nodes[i], Nodes[j]);
+                CreateEdge(nodes[i], nodes[j]);
             }
         }
 
@@ -121,16 +117,16 @@ namespace Graph
         private void CreateEdge(Node a, Node b)
         {
             if (a == b) return;
-            numberOfEdges++;
+            NumberOfEdges++;
 
             a.connectedNodes.Add(b);
             b.connectedNodes.Add(a);
 
-            Edges.Add(Instantiate(EdgeObject, a.position, Quaternion.identity).GetComponent<Edge>());
-            Edges[numberOfEdges - 1].ConnectEdge(a, b, edgeThicknessPercentage);
-            Edges[numberOfEdges - 1].EdgeID = numberOfEdges - 1;
-            a.connectedEdges[b] = Edges[numberOfEdges - 1];
-            b.connectedEdges[a] = Edges[numberOfEdges - 1];
+            edges.Add(Instantiate(edgeObject, a.position, Quaternion.identity).GetComponent<Edge>());
+            edges[NumberOfEdges - 1].ConnectEdge(a, b, edgeThicknessPercentage);
+            edges[NumberOfEdges - 1].edgeID = NumberOfEdges - 1;
+            a.connectedEdges[b] = edges[NumberOfEdges - 1];
+            b.connectedEdges[a] = edges[NumberOfEdges - 1];
         }
 
         public Edge GetEdge(Node firstNode, Node secondNode)

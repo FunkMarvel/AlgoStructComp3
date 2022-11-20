@@ -5,137 +5,140 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Edge = Graph.Edge;
 
-public class Dijkstra : MonoBehaviour
+namespace Pathfinding
 {
-    public List<Node> CreatedNodes;
-    public List<Edge> openEdges = new();
-    private readonly float _searchInterval = 0.5f;
-
-    private float _searchTimer;
-    private bool bGotPath;
-    private bool done;
-
-    private Node goalNode;
-    private GraphLogic graph;
-    private Node lastPos;
-
-    private int NumberOfNodes;
-    private Node startNode;
-
-    private void Awake()
+    public class Dijkstra : MonoBehaviour
     {
-        graph = FindObjectOfType<GraphLogic>();
-    }
+        public List<Node> createdNodes;
+        public List<Edge> openEdges = new();
+        private readonly float _searchInterval = 0.5f;
 
-    private void Start()
-    {
-        if (graph.currentAlgorithm == DataInstance.Algorithm.Dijkstra)
-        {
-            BeginSearch();
-        }
-        else
-        {
-            done = true;
-            bGotPath = true;
-        }
-    }
+        private float _searchTimer;
+        private bool _bGotPath;
+        private bool _done;
 
-    // Update is called once per frame
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
-        if (Input.GetKeyDown(KeyCode.C) && !done) Search(lastPos);
-        if (Input.GetKeyDown(KeyCode.M)) GetPath();
+        private Node _goalNode;
+        private GraphLogic _graph;
+        private Node _lastPos;
 
-        if (!done && _searchTimer < _searchInterval)
+        private int _numberOfNodes;
+        private Node _startNode;
+
+        private void Awake()
         {
-            _searchTimer += Time.deltaTime;
-        }
-        else if (!done)
-        {
-            _searchTimer = 0f;
-            Search(lastPos);
+            _graph = FindObjectOfType<GraphLogic>();
         }
 
-        if (done && !bGotPath)
+        private void Start()
         {
-            GetPath();
-            bGotPath = true;
-        }
-    }
-
-    // Start is called before the first frame update
-    private void BeginSearch()
-    {
-        CreatedNodes = graph.Nodes;
-        NumberOfNodes = graph.Nodes.Count;
-
-        Debug.Log("Antall nodes: " + NumberOfNodes);
-        Debug.Log("BEFORE");
-        startNode = graph.Nodes[0];
-        goalNode = graph.Nodes[NumberOfNodes - 1];
-        Debug.Log("ree");
-
-        lastPos = startNode;
-        startNode.SetColor(Color.magenta);
-        goalNode.SetColor(Color.red);
-    }
-
-    private void Search(Node thisNode)
-    {
-        if (thisNode == goalNode)
-        {
-            done = true;
-            return;
-        }
-
-        foreach (var NextNode in thisNode.connectedNodes)
-        {
-            var G = thisNode.timeToFinish;
-            var H = GraphLogic.Distance(thisNode, NextNode);
-            var F = G + H;
-
-            var TempEdge = thisNode.GetEdge(NextNode);
-            TempEdge.UpdateEdge(G, H, F);
-
-            if (TempEdge.bOpen)
+            if (_graph.currentAlgorithm == DataInstance.Algorithm.Dijkstra)
             {
-                TempEdge.parent = thisNode;
-                openEdges.Add(TempEdge);
+                BeginSearch();
+            }
+            else
+            {
+                _done = true;
+                _bGotPath = true;
             }
         }
 
-        openEdges = openEdges.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
-        var pm = openEdges.ElementAt(0);
-        pm.bOpen = false;
-        thisNode = pm.parent;
-
-        openEdges.RemoveAt(0);
-
-        foreach (var e in openEdges) e.SetColor(Color.blue);
-
-        pm.SetColor(Color.red);
-
-        if (!pm.connectedNodes.Contains(thisNode))
-            Debug.LogError("Edge-node mismatch! " + thisNode.NodeID + " : " + pm.EdgeID);
-        lastPos = pm.connectedNodes.Find(e => e != thisNode);
-        lastPos.parent = thisNode;
-    }
-
-    private void GetPath()
-    {
-        //RemoveAllMarkers();
-        var begin = lastPos;
-
-        while (startNode != begin)
+        // Update is called once per frame
+        private void Update()
         {
-            Debug.Log("NodeNr: " + begin.NodeID);
-            var TempEdge = begin.GetEdge(begin.parent);
-            Debug.Log("Found Edge: " + TempEdge.EdgeID);
-            TempEdge.SetColor(Color.green);
-            begin = begin.parent;
+            if (Input.GetKeyDown(KeyCode.P)) BeginSearch();
+            if (Input.GetKeyDown(KeyCode.C) && !_done) Search(_lastPos);
+            if (Input.GetKeyDown(KeyCode.M)) GetPath();
 
-            if (begin.IsUnityNull()) break;
+            if (!_done && _searchTimer < _searchInterval)
+            {
+                _searchTimer += Time.deltaTime;
+            }
+            else if (!_done)
+            {
+                _searchTimer = 0f;
+                Search(_lastPos);
+            }
+
+            if (_done && !_bGotPath)
+            {
+                GetPath();
+                _bGotPath = true;
+            }
+        }
+
+        // Start is called before the first frame update
+        private void BeginSearch()
+        {
+            createdNodes = _graph.nodes;
+            _numberOfNodes = _graph.nodes.Count;
+
+            Debug.Log("Antall nodes: " + _numberOfNodes);
+            Debug.Log("BEFORE");
+            _startNode = _graph.nodes[0];
+            _goalNode = _graph.nodes[_numberOfNodes - 1];
+            Debug.Log("ree");
+
+            _lastPos = _startNode;
+            _startNode.SetColor(Color.magenta);
+            _goalNode.SetColor(Color.red);
+        }
+
+        private void Search(Node thisNode)
+        {
+            if (thisNode == _goalNode)
+            {
+                _done = true;
+                return;
+            }
+
+            foreach (var NextNode in thisNode.connectedNodes)
+            {
+                var G = thisNode.timeToFinish;
+                var H = GraphLogic.Distance(thisNode, NextNode);
+                var F = G + H;
+
+                var TempEdge = thisNode.GetEdge(NextNode);
+                TempEdge.UpdateEdge(G, H, F);
+
+                if (TempEdge.bOpen)
+                {
+                    TempEdge.parent = thisNode;
+                    openEdges.Add(TempEdge);
+                }
+            }
+
+            openEdges = openEdges.OrderBy(p => p.F).ThenBy(n => n.H).ToList();
+            var pm = openEdges.ElementAt(0);
+            pm.bOpen = false;
+            thisNode = pm.parent;
+
+            openEdges.RemoveAt(0);
+
+            foreach (var e in openEdges) e.SetColor(Color.blue);
+
+            pm.SetColor(Color.red);
+
+            if (!pm.connectedNodes.Contains(thisNode))
+                Debug.LogError("Edge-node mismatch! " + thisNode.NodeID + " : " + pm.edgeID);
+            _lastPos = pm.connectedNodes.Find(e => e != thisNode);
+            _lastPos.parent = thisNode;
+        }
+
+        private void GetPath()
+        {
+            //RemoveAllMarkers();
+            var begin = _lastPos;
+
+            while (_startNode != begin)
+            {
+                Debug.Log("NodeNr: " + begin.NodeID);
+                var TempEdge = begin.GetEdge(begin.parent);
+                Debug.Log("Found Edge: " + TempEdge.edgeID);
+                TempEdge.SetColor(Color.green);
+                begin = begin.parent;
+
+                if (begin.IsUnityNull()) break;
+            }
         }
     }
 }

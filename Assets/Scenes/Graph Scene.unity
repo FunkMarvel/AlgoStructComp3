@@ -353,6 +353,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4784726784176889412, guid: 1a216cb31cdea3f4cad99453ab51da4b, type: 3}
+      propertyPath: edgeObject
+      value: 
+      objectReference: {fileID: 9057616118498499149, guid: f3911c64701cbe945bdf76bc3b6ee66f, type: 3}
+    - target: {fileID: 4784726784176889412, guid: 1a216cb31cdea3f4cad99453ab51da4b, type: 3}
+      propertyPath: nodeObject
+      value: 
+      objectReference: {fileID: 3108671141111388403, guid: 1f147b126723a16419341ba060332bc7, type: 3}
+    - target: {fileID: 4784726784176889412, guid: 1a216cb31cdea3f4cad99453ab51da4b, type: 3}
       propertyPath: edgeThicknessPercentage
       value: 2
       objectReference: {fileID: 0}
@@ -379,11 +387,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984a12d91286cbd458ea148f37eee260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GraphLogic: {fileID: 0}
-  closedMaterial: {fileID: 0}
-  openMaterial: {fileID: 0}
-  start: {fileID: 0}
-  end: {fileID: 0}
-  pathP: {fileID: 0}
-  CreatedNodes: []
-  Neighbours: []
+  createdNodes: []
+  openEdges: []

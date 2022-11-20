@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Graph
     [RequireComponent(typeof(LineRenderer))]
     public class Edge : MonoBehaviour
     {
-        public int EdgeID = -1;
+        public int edgeID = -1;
         public List<Node> connectedNodes;
         public bool bOpen = true;
         public Node parent;
@@ -73,7 +74,7 @@ namespace Graph
 
         public static bool operator ==(Edge someEdge, Edge otherEdge)
         {
-            return otherEdge != null && someEdge != null && someEdge.EdgeID == otherEdge.EdgeID;
+            return otherEdge != null && someEdge != null && someEdge.edgeID == otherEdge.edgeID;
         }
 
         public static bool operator !=(Edge someEdge, Edge otherEdge)

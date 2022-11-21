@@ -34,6 +34,7 @@ namespace Pathfinding
             if (_graph.currentAlgorithm == DataInstance.Algorithm.AStar)
             {
                 BeginSearch();
+                _graph.Done = true;
             }
             else
             {

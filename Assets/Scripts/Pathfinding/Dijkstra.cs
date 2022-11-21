@@ -34,6 +34,7 @@ namespace Pathfinding
             if (_graph.currentAlgorithm == DataInstance.Algorithm.Dijkstra)
             {
                 BeginSearch();
+                _graph.Done = true;
             }
             else
             {

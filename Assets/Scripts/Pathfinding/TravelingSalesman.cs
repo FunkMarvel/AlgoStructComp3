@@ -29,35 +29,6 @@ public class TravelingSalesman : MonoBehaviour
     private void Awake()
     {
         _graph = FindObjectOfType<GraphLogic>();
-
-        _graph.nodes = _graph.nodes.OrderBy(Node => Node.NodeID).ToList();
-
-        costMatrix = new List<List<float>>();
-        costMatrix.Capacity = _graph.NumberOfNodes;
-
-        for (var i = 0; i < _graph.NumberOfNodes; i++)
-        {
-            var column = new List<float>();
-            column.Capacity = _graph.NumberOfNodes;
-
-            for (var j = 0; j < _graph.NumberOfNodes; j++)
-            {
-                if (i == j)
-                {
-                    column.Add(0f);
-                    continue;
-                }
-
-                var edge = _graph.nodes[i].GetEdge(_graph.nodes[j]);
-
-                if (edge)
-                    column.Add(edge.timeToFinish);
-                else
-                    column.Add(float.MaxValue);
-            }
-
-            costMatrix.Add(column);
-        }
     }
 
     // Start is called before the first frame update
@@ -65,7 +36,41 @@ public class TravelingSalesman : MonoBehaviour
     {
         if (_graph.currentAlgorithm == DataInstance.Algorithm.TSP)
         {
+            _graph.nodes = _graph.nodes.OrderBy(Node => Node.NodeID).ToList();
+
+            costMatrix = new List<List<float>>();
+            costMatrix.Capacity = _graph.NumberOfNodes;
+
+            // generate cost matrix
+            for (var i = 0; i < _graph.NumberOfNodes; i++)
+            {
+                var column = new List<float>();
+                column.Capacity = _graph.NumberOfNodes;
+
+                for (var j = 0; j < _graph.NumberOfNodes; j++)
+                {
+                    if (i == j)
+                    {
+                        column.Add(0f);
+                        continue;
+                    }
+
+                    var edge = _graph.nodes[i].GetEdge(_graph.nodes[j]);
+
+                    if (edge)
+                        column.Add(edge.timeToFinish);
+                    else
+                        column.Add(float.MaxValue);
+                }
+
+                costMatrix.Add(column);
+            }
+        }
+        
+        if (_graph.currentAlgorithm == DataInstance.Algorithm.TSP)
+        {
             BeginSearch();
+            _graph.Done = true;
         }
         else
         {
@@ -77,7 +82,10 @@ public class TravelingSalesman : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+
     }
+
+    
 
     private void BeginSearch()
     {
@@ -85,22 +93,12 @@ public class TravelingSalesman : MonoBehaviour
         {
             case TSPMethod.NearestNeighbour:
                 _startNode = _graph.nodes[0];
-                _startNode.SetColor(Color.red);
+                _startNode.SetColor(Color.magenta);
                 NearestNeighbourIterate(_startNode);
                 break;
         }
 
         _startNode.GetEdge(_startNode.parent).UpdateEdge(minCost, 0f, 0f);
-
-        foreach (var edge in _graph.edges)
-        {
-            Debug.Log("Making edge " + edge.edgeID + " invisible");
-            if (edge.bOpen)
-            {
-                edge.IsVisible(false);
-                Debug.Log("invi done");
-            }
-        }
     }
 
     private void NearestNeighbourIterate(Node someNode)

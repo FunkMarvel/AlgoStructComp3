@@ -6,6 +6,9 @@ namespace Menu
 {
     public class MainMenuScript : MonoBehaviour
     {
+        /// <summary>
+        /// Enum representing states of menu
+        /// </summary>
         public enum MenuState
         {
             MainMenuState,
@@ -13,8 +16,9 @@ namespace Menu
             TravelingSalesmanState
         }
 
-        public const string GraphLevel = "Graph Scene";
+        public const string GraphLevel = "Graph Scene";  // name of graph scene
 
+        // refrences to menu objects
         public GameObject shortestPathScreen;
         public GameObject travlingSalesmanScreen;
 
@@ -22,9 +26,11 @@ namespace Menu
         public TMP_InputField numNodesTsp;
         public TMP_InputField numEdgesShort;
 
+        // default graph parameters
         public int numberNodes = 20;
         public int numberEdgesPerNode = 5;
 
+        // default menu state
         public MenuState currentState = MenuState.MainMenuState;
 
         private bool _bEnteringState;
